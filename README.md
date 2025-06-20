@@ -79,17 +79,24 @@ export class AliceController {
 
 ### 2. Подключите middleware в приложении
 ```typescript
-// src/main.ts
+// src/app.module.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { IntentMiddleware } from '@kirillchervotkin/alice-nestjs-framework';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.use(IntentMiddleware); // Подключение обработчика Алисы
-  await app.listen(3000);
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
+})
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(IntentMiddleware)
+      .forRoutes('*');
+  }
 }
-bootstrap();
 ```
 
 ## Основные компоненты

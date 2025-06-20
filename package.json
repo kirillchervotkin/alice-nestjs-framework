@@ -1,0 +1,27 @@
+{
+  "name": "@kirillchervotkin/alice-nestjs-framework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirillchervotkin/alice-nestjs-framework.git"
+  },
+  "version": "1.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "zod": "^3.25.64"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.3",
+    "@nestjs/core": "^11.1.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3"
+  }
+}

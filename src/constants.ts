@@ -1,0 +1,1 @@
+export const INTENT_KEY = 'custom:intent';
