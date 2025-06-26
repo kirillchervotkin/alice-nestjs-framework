@@ -167,11 +167,12 @@ export interface SkillResponseBody {
  * Интерфейс кнопки для ответа навыка
  * @see {@link https://yandex.ru/dev/dialogs/alice/doc/ru/buttons|Документация}
  */
-export interface Button {
+export interface Button <T extends object = object> {
     /** Текст на кнопке (макс. 64 символа) */
     title: string;
     /** Флаг скрытия кнопки после нажатия */
     hide: boolean;
+    payload?: T;
 }
 
 /**

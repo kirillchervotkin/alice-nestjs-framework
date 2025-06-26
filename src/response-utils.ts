@@ -40,7 +40,13 @@ export class SkillResponse {
      */
     public session_state?: any;
 
-
+    /**
+     * Инициализирует массив кнопок, если он еще не был инициализирован.
+     */
+    public initButtonsIfNeeded(): void {
+        if (!this.response.buttons) {
+            this.response.buttons = [];}
+    }
 }
 
 /**
@@ -61,14 +67,32 @@ export class SkillResponseBuilder {
 
     /**
      * Добавить кнопку в конец списка
-     * @param {string} title - Текст кнопки (макс. 64 символа)
+     * @param {string} title - Текст кнопки (макс. 64 символа) 
      * @param {boolean} hide - Скрывать ли кнопку после нажатия
      * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Кнопки в ответе](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
+     * @see [Кнопки в ответе] (https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
      */
-    public setButton(title: string, hide: boolean): SkillResponseBuilder {
-        this.initButtonsIfNeeded();
-        this.response.response.buttons!.push({ title, hide });
+    public setButton(title: string, hide: boolean): SkillResponseBuilder;
+    public setButton(button: Button): SkillResponseBuilder;
+    public setButton(buttonOrTitle: string | Button, hide?: boolean): SkillResponseBuilder {
+        this.response.initButtonsIfNeeded();
+
+        if (typeof buttonOrTitle === 'string') {
+            // Обработка случая, когда button - это строка (текст кнопки)
+            if (hide === undefined) {
+                throw new Error("Parameter 'hide' is required when 'button' is a string.");
+            }
+
+            this.response.response.buttons!.push({
+                title: buttonOrTitle,
+                hide: hide,
+                payload: {}
+            });
+        } else {
+            // Обработка случая, когда button - это объект Button
+            this.response.response.buttons!.push(buttonOrTitle);
+        }
+
         return this;
     }
 
@@ -82,7 +106,10 @@ export class SkillResponseBuilder {
     public setPrependButton(title: string, hide: boolean): SkillResponseBuilder {
         this.initButtonsIfNeeded();
         this.removeExistingButton(title);
-        this.response.response.buttons!.unshift({ title, hide });
+        this.response.response.buttons!.unshift({
+            title, hide,
+            payload: {}
+        });
         return this;
     }
 
