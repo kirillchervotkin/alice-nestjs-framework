@@ -156,7 +156,9 @@ export interface SkillResponseBody {
     /** Тип ответа (по умолчанию 'text') */
     response_type: string;
     /** Текст ответа, который увидит/услышит пользователь (макс. 1024 символа) */
-    text: string;
+    text?: string;
+    /** Текст для синтеза речи (TTS), если отсутствует text */
+    tts?: string;
     /** Флаг завершения сессии */
     end_session: boolean;
     /** Массив кнопок для отображения в интерфейсе */
@@ -167,11 +169,13 @@ export interface SkillResponseBody {
  * Интерфейс кнопки для ответа навыка
  * @see {@link https://yandex.ru/dev/dialogs/alice/doc/ru/buttons|Документация}
  */
-export interface Button {
+export interface Button <T extends object = object> {
     /** Текст на кнопке (макс. 64 символа) */
     title: string;
     /** Флаг скрытия кнопки после нажатия */
     hide: boolean;
+    /** Произвольный payload, который будет передан навыку при нажатии на кнопку */
+    payload?: T;
 }
 
 /**

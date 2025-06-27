@@ -7,13 +7,29 @@ export class SkillResponse {
     * @see [Текст ответа](https://yandex.ru/dev/dialogs/alice/doc/ru/response#response__response-desc)
     * @see [Формат ответа](https://yandex.ru/dev/dialogs/alice/doc/ru/response)
     */
-    constructor(message: string) {
+    /** @deprecated */
+    constructor(message: string);
+     constructor(message: string | { text?: string; tts?: string }) {
         this.response = {
             response_type: 'text',
-            text: message,
             end_session: false,
         };
         this.version = "1.0";
+
+        if (typeof message === 'string') {
+            // Обрабатываем строку как { text: message }
+            this.setTextAndTTS(message);
+        } else {
+            // Обрабатываем объект
+            if (message.text) {
+                this.setTextAndTTS(message.text, message.tts);
+            } else if (message.tts) {
+                this.setTextAndTTS(undefined, message.tts); // TTS есть, текста нет
+                this.response.text = undefined; // Явно указываем, что текста нет.
+            } else {
+                throw new Error("Either 'text' or 'tts' must be provided in the object.");
+            }
+        }
     }
 
     /** 
@@ -40,7 +56,24 @@ export class SkillResponse {
      */
     public session_state?: any;
 
+    /**
+     * Инициализирует массив кнопок, если он еще не был инициализирован.
+     */
+    public initButtonsIfNeeded(): void {
+        if (!this.response.buttons) {
+            this.response.buttons = [];}
+    }
 
+    /**
+     * Устанавливает текст ответа и TTS (если tts не передан, то текст используется и для TTS).
+     * @param {string} text Текст ответа.
+     * @param {string} tts  TTS ответа (опционально). Если не указан, то текст используется для TTS.
+     * @returns {void}
+     */
+    public setTextAndTTS(text: string | undefined, tts?: string): void {
+        this.response.text = text;
+        this.response.tts = tts || text; // Если tts не указан, используем text
+    }
 }
 
 /**
@@ -66,9 +99,31 @@ export class SkillResponseBuilder {
      * @returns {SkillResponseBuilder} this для цепочки вызовов
      * @see [Кнопки в ответе](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
      */
-    public setButton(title: string, hide: boolean): SkillResponseBuilder {
-        this.initButtonsIfNeeded();
-        this.response.response.buttons!.push({ title, hide });
+    public setButton(title: string, hide: boolean): SkillResponseBuilder;
+    /**
+     * Добавить кнопку в конец списка
+     * @param {Button} button - Объект кнопки
+     * @returns {SkillResponseBuilder} this для цепочки вызовов
+     * @see [Кнопки в ответе](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
+     */
+    public setButton(button: Button): SkillResponseBuilder;
+    public setButton(buttonOrTitle: string | Button, hide?: boolean): SkillResponseBuilder {
+        this.response.initButtonsIfNeeded();
+
+        if (typeof buttonOrTitle === 'string') {
+            // Обработка случая, когда button - это строка (текст кнопки)
+            if (hide === undefined) {
+                throw new Error("Parameter 'hide' is required when 'button' is a string.");
+            }
+            this.response.response.buttons!.push({
+                title: buttonOrTitle,
+                hide: hide,
+                payload: {}
+            });
+        } else {
+            // Обработка случая, когда button - это объект Button
+            this.response.response.buttons!.push(buttonOrTitle);
+        }
         return this;
     }
 
