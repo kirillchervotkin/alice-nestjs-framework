@@ -47,6 +47,10 @@ export class SkillResponse {
         if (!this.response.buttons) {
             this.response.buttons = [];}
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }
 
 /**
@@ -73,6 +77,15 @@ export class SkillResponseBuilder {
      * @see [Кнопки в ответе] (https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
      */
     public setButton(title: string, hide: boolean): SkillResponseBuilder;
+<<<<<<< Updated upstream
+=======
+    /**
+     * Добавить кнопку в конец списка
+     * @param {Button} button - Объект кнопки
+     * @returns {SkillResponseBuilder} this для цепочки вызовов
+     * @see [Кнопки в ответе](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
+     */
+>>>>>>> Stashed changes
     public setButton(button: Button): SkillResponseBuilder;
     public setButton(buttonOrTitle: string | Button, hide?: boolean): SkillResponseBuilder {
         this.response.initButtonsIfNeeded();
@@ -82,7 +95,10 @@ export class SkillResponseBuilder {
             if (hide === undefined) {
                 throw new Error("Parameter 'hide' is required when 'button' is a string.");
             }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             this.response.response.buttons!.push({
                 title: buttonOrTitle,
                 hide: hide,
@@ -92,7 +108,10 @@ export class SkillResponseBuilder {
             // Обработка случая, когда button - это объект Button
             this.response.response.buttons!.push(buttonOrTitle);
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return this;
     }
 

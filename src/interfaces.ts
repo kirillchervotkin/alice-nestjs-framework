@@ -167,11 +167,19 @@ export interface SkillResponseBody {
  * Интерфейс кнопки для ответа навыка
  * @see {@link https://yandex.ru/dev/dialogs/alice/doc/ru/buttons|Документация}
  */
+<<<<<<< Updated upstream
 export interface Button <T extends object = object> {
+=======
+export interface Button <T extends object = object>{
+>>>>>>> Stashed changes
     /** Текст на кнопке (макс. 64 символа) */
     title: string;
     /** Флаг скрытия кнопки после нажатия */
     hide: boolean;
+<<<<<<< Updated upstream
+=======
+    /** Произвольный payload, который будет передан навыку при нажатии на кнопку */
+>>>>>>> Stashed changes
     payload?: T;
 }
 
