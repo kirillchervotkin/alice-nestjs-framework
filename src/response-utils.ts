@@ -9,7 +9,7 @@ export class SkillResponse {
     */
     /** @deprecated */
     constructor(message: string);
-     constructor(message: string | { text?: string; tts?: string }) {
+    constructor(message: string | { text?: string; tts?: string }) {
         this.response = {
             response_type: 'text',
             end_session: false,
@@ -25,7 +25,7 @@ export class SkillResponse {
                 this.setTextAndTTS(message.text, message.tts);
             } else if (message.tts) {
                 this.setTextAndTTS(undefined, message.tts); // TTS есть, текста нет
-                this.response.text = undefined; // Явно указываем, что текста нет.
+                this.response.text = undefined; // Явно указываем, что текста нет
             } else {
                 throw new Error("Either 'text' or 'tts' must be provided in the object.");
             }
