@@ -2,129 +2,67 @@
  * Интерфейс входящего запроса от Яндекс Диалогов
  * @see https://yandex.ru/dev/dialogs/alice/doc/ru/request [Официальная документация]
  */
-export interface AliceRequest<T> {
-    /**
-     * Мета-информация об устройстве и окружении пользователя
-     */
+export interface AliceRequest<T = unknown, U = unknown, A = unknown> {
     meta: {
-        /** Локаль устройства (например, ru-RU) */
         locale: string;
-        /** Часовой пояс (например, Europe/Moscow) */
         timezone: string;
-        /** Идентификатор клиентского приложения */
         client_id: string;
-        /** 
-         * Доступные интерфейсы устройства
-         * @property {object} [screen] - Наличие экрана
-         * @property {object} [account_linking] - Возможность связки аккаунтов
-         * @property {object} [audio_player] - Возможность воспроизведения аудио
-         */
         interfaces: {
-            screen?: Record<string, never>;
-            account_linking?: Record<string, never>;
-            audio_player?: Record<string, never>;
+            screen?: object;
+            payments?: object;
+            account_linking?: object;
+            audio_player?: object;
         };
     };
-
-    /**
-     * Информация о запросе пользователя
-     */
-    request?: {
-        /** Тип входящего запроса */
+    request: {
         type: 'SimpleUtterance' | 'ButtonPressed' | 'Purchase.Confirmation' | 'Show.Pull';
-        /** Текст команды после активации навыка */
         command: string;
-        /** Полный оригинальный текст запроса */
         original_utterance: string;
-        /** 
-         * Информация о потенциально опасном содержании
-         * @property {boolean} [dangerous_context] - Флаг опасного контекста
-         */
         markup?: {
             dangerous_context?: boolean;
         };
-        /** 
-         * Результаты обработки естественного языка (NLU)
-         * @see https://yandex.ru/dev/dialogs/alice/doc/nlu.html [Документация NLU]
-         */
-        nlu: {
-            /** Токенизированный текст запроса */
+        payload?: Record<string, unknown>;
+        nlu?: {
             tokens: string[];
-            /** Распознанные сущности */
             entities: Array<{
-                /** Тип сущности (YANDEX.DATETIME, YANDEX.FIO и т.д.) */
-                type: string;
-                /** Позиции сущности в токенах */
+                type: 'YANDEX.FIO' | 'YANDEX.GEO' | 'YANDEX.DATETIME' | 'YANDEX.NUMBER' | string;
                 tokens: {
                     start: number;
                     end: number;
                 };
-                /** Значение сущности (зависит от типа) */
                 value: string | number | boolean | Record<string, unknown>;
             }>;
-            /** 
-             * Распознанные интенты (намерения)
-             * @example { "YANDEX.CONFIRM": { slots: {} } }
-             */
             intents?: Record<string, {
-                /** Слоты интента */
                 slots: Record<string, {
-                    /** Тип значения слота */
                     type: string;
-                    /** Значение слота */
-                    value: string | number | boolean;
+                    value: string | number | boolean | Record<string, unknown>;
                 }>;
             }>;
         };
     };
-
-    /**
-     * Информация о сессии
-     */
     session: {
-        /** Счетчик сообщений в сессии */
+        new: boolean;
         message_id: number;
-        /** Уникальный идентификатор сессии */
         session_id: string;
-        /** Идентификатор навыка */
         skill_id: string;
-        /** 
-         * Информация о пользователе
-         * @property {string} user_id - Уникальный идентификатор пользователя
-         * @property {string} [access_token] - OAuth-токен для авторизации
-         */
         user?: {
             user_id: string;
             access_token?: string;
         };
-        /** 
-         * Информация о приложении
-         * @property {string} application_id - Идентификатор экземпляра приложения
-         */
         application: {
             application_id: string;
         };
-        /** Флаг новой сессии */
-        new: boolean;
+        user_id?: string; // Устаревшее поле, оставлено для обратной совместимости
     };
-
-    /**
-     * Состояние навыка
-     */
-    state: {
-        /** Состояние сессии */
+    state?: {
         session?: T;
-        /** Состояние пользователя */
-        user?: Record<string, unknown>;
-        /** Состояние приложения */
-        application?: Record<string, unknown>;
+        user?: U;
+        application?: A;
     };
-
-    /** Версия протокола (текущая: 1.0) */
     version: string;
 }
 
-export interface Session {
+export interface SessionState {
     nextHandler?: string,
     data?: unknown
 }
