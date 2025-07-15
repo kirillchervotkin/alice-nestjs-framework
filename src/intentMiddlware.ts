@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, NestMiddleware, OnModuleInit } from "@nestjs/common";
+import { BadRequestException, Injectable, NestMiddleware, OnModuleInit} from "@nestjs/common";
 import { ModulesContainer, Reflector } from "@nestjs/core";
 import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
 import { Response, Request, NextFunction } from 'express';
-import { AliceRequestSchema, SessionSchema } from "./schemes";
+import { AliceRequestSchema, SessionStateSchema } from "./schemes";
 import { INTENT_KEY } from "./constants";
-import { AliceRequest, Session } from "./interfaces";
+import { AliceRequest, SessionState } from "./interfaces";
 
 @Injectable()
 export class IntentMiddleware implements NestMiddleware, OnModuleInit {
@@ -22,13 +22,15 @@ export class IntentMiddleware implements NestMiddleware, OnModuleInit {
 
     use(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log('test');
             if (req.body?.request?.original_utterance === 'ping') {
                 return res.status(200).json({ text: '' });
             }
-            const validatedRequest: AliceRequest<Session> = this.validateRequest(req.body);
+            const validatedRequest: AliceRequest<SessionState> = this.validateRequest(req.body);
             req.url = this.determineRoute(validatedRequest);
             next();
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -59,8 +61,8 @@ export class IntentMiddleware implements NestMiddleware, OnModuleInit {
         }
     }
 
-    private validateRequest(body: unknown): AliceRequest<Session> {
-        const result = AliceRequestSchema(SessionSchema).safeParse(body);
+    private validateRequest(body: unknown): AliceRequest<SessionState> {
+        const result = AliceRequestSchema(SessionStateSchema).safeParse(body);
 
         if (!result.success) {
             throw new BadRequestException('Invalid Alice request');
@@ -69,10 +71,10 @@ export class IntentMiddleware implements NestMiddleware, OnModuleInit {
         return result.data;
     }
 
-    private determineRoute(aliceRequest: any): string {
+    private determineRoute(aliceRequest: AliceRequest<SessionState>): string {
         const intents = Object.keys(aliceRequest.request?.nlu?.intents || {});
         const command = aliceRequest.request?.command || '';
-        const nextHandler = aliceRequest.state.session?.nextHandler || '';
+        const nextHandler = aliceRequest.state?.session?.nextHandler || '';
 
         const matchedIntents = intents.filter(intent =>
             this.allIntents.includes(intent)
