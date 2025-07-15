@@ -1,4 +1,5 @@
 import { Button, SkillResponseBody } from "./interfaces";
+import { Card } from "./types/cards";
 
 export class SkillResponse {
 
@@ -47,138 +48,138 @@ export class SkillResponse {
  * Строитель для создания сложных ответов навыка
  * @see {@link https://yandex.ru/dev/dialogs/alice/doc/ru/session-persistence|Хранение состояния}
  */
+
+export interface AliceResponse {
+    /** Версия протокола */
+    version: string;
+    /** Тело ответа */
+    response: {
+        /** Тип ответа (по умолчанию 'text') */
+        response_type?: string; // Сделано опциональным
+        /** Текст ответа (макс. 1024 символа) */
+        text: string;
+        /** Озвучка текста (SSML) */
+        tts?: string;
+        /** Визуальная карточка */
+        card?: Card;
+        /** Флаг завершения сессии */
+        end_session: boolean;
+        /** Массив кнопок */
+        buttons?: Button[];
+        /** Специальные инструкции */
+        directives?: unknown;
+    };
+    /** Объект для запуска авторизации */
+    start_account_linking?: {};
+    /** Состояние сессии */
+    session_state?: {
+        nextHandler?: string;
+        data?: unknown;
+    };
+    /** Обновление состояния пользователя */
+    user_state_update?: unknown;
+    /** Состояние приложения */
+    application_state?: unknown;
+    /** Аналитические события */
+    analytics?: Analytics;
+}
+
+export interface Analytics {
+    /** События для аналитики */
+    events: Array<{
+        /** Название события */
+        name: string;
+        /** Дополнительные данные */
+        value?: unknown;
+    }>;
+}
+
 export class SkillResponseBuilder {
-    private readonly response: SkillResponse;
+    private response: AliceResponse;
 
-    /**
-     * Конструктор ответа навыка для Яндекс Диалогов
-     * @param {string} message - Базовое сообщение для ответа
-     * @see [Формат ответа](https://yandex.ru/dev/dialogs/alice/doc/response.html)
-     */
     constructor(message: string) {
-        this.response = new SkillResponse(message);
+        this.response = {
+            version: "1.0",
+            response: {
+                response_type: 'text',
+                text: message,
+                end_session: false,
+            }
+        };
     }
 
-    /**
-     * Добавить кнопку в конец списка
-     * @param {string} title - Текст кнопки (макс. 64 символа)
-     * @param {boolean} hide - Скрывать ли кнопку после нажатия
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Кнопки в ответе](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
-     */
-    public setButton(title: string, hide: boolean): SkillResponseBuilder {
-        this.initButtonsIfNeeded();
-        this.response.response.buttons!.push({ title, hide });
+    public setButton(title: string, hide: boolean): SkillResponseBuilder;
+
+    public setButton(button: Button): SkillResponseBuilder;
+    public setButton(arg1: string | Button, arg2?: boolean): SkillResponseBuilder {
+        if (arg2 !== undefined) {
+            // Вызов с двумя параметрами
+            const title = arg1 as string;
+            (this.response.response.buttons ??= []).push({ title, hide: arg2 });
+        } else {
+            // Вызов с одним параметром
+            const button = arg1 as Button;
+            (this.response.response.buttons ??= []).push(button);
+        }
         return this;
     }
 
-    /**
-     * Добавить кнопку в начало списка с проверкой дубликатов
-     * @param {string} title - Текст кнопки (макс. 64 символа)
-     * @param {boolean} hide - Скрывать ли кнопку после нажатия
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Структура кнопок](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
-     */
     public setPrependButton(title: string, hide: boolean): SkillResponseBuilder {
-        this.initButtonsIfNeeded();
         this.removeExistingButton(title);
-        this.response.response.buttons!.unshift({ title, hide });
+        (this.response.response.buttons ??= []).unshift({ title, hide });
         return this;
     }
 
-    /**
-     * Добавить массив кнопок
-     * @param {Button[]} buttons - Массив объектов кнопок
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Работа с кнопками](https://yandex.ru/dev/dialogs/alice/doc/buttons.html)
-     */
     public setButtons(buttons: Button[]): SkillResponseBuilder {
-        this.initButtonsIfNeeded();
-        this.response.response.buttons!.push(...buttons);
+        (this.response.response.buttons ??= []).push(...buttons);
         return this;
     }
 
-    /**
-     * Завершить текущую сессию (устаревшее)
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Завершение сессии](https://yandex.ru/dev/dialogs/alice/doc/session-persistence.html)
-     */
     public setEndSesstion(): SkillResponseBuilder {
         return this.setEndSession();
     }
 
-    /**
-     * Завершить текущую сессию
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Управление сессией](https://yandex.ru/dev/dialogs/alice/doc/session-persistence.html)
-     */
     public setEndSession(): SkillResponseBuilder {
         this.response.response.end_session = true;
         return this;
     }
 
-    /**
-     * Инициировать процесс авторизации
-     * @see [Связка аккаунтов](https://yandex.ru/dev/dialogs/alice/doc/auth.html)
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     */
     public setStartAccountLinking(): SkillResponseBuilder {
         this.response.start_account_linking = {};
         return this;
     }
 
-    /**
-     * Сохранить произвольные данные в состоянии сессии
-     * @param {any} data - Данные для сохранения (макс. 1 КБ)
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Хранение состояния](https://yandex.ru/dev/dialogs/alice/doc/session-persistence.html)
-     */
+    public setTts(tts: string): SkillResponseBuilder {
+        this.response.response.tts = tts;
+        return this;
+    }
+
     public setData<T>(data: T): SkillResponseBuilder {
-        this.ensureSessionStateExists();
-        this.response.session_state!.data = data;
+        (this.response.session_state ??= {}).data = data;
         return this;
     }
 
-    /**
-     * Установить следующий обработчик для цепочки диалога
-     * @param {string} handlerName - Имя следующего обработчика
-     * @returns {SkillResponseBuilder} this для цепочки вызовов
-     * @see [Диалоговые состояния](https://yandex.ru/dev/dialogs/alice/doc/session-persistence.html)
-     */
     public setNextHandler(handlerName: string): SkillResponseBuilder {
-        this.ensureSessionStateExists();
-        this.response.session_state!.nextHandler = handlerName;
+        (this.response.session_state ??= {}).nextHandler = handlerName;
         return this;
     }
 
-    /**
-     * Собрать финальный объект ответа
-     * @returns {SkillResponse} Готовый объект ответа
-     */
-    public build(): SkillResponse {
+    public setCard(card: Card): SkillResponseBuilder {
+        this.response.response.card = card;
+        return this;
+    }
+
+    public build(): AliceResponse {
         return this.response;
     }
 
-    /** Инициализирует массив кнопок при первом вызове */
-    private initButtonsIfNeeded(): void {
-        if (!this.response.response.buttons) {
-            this.response.response.buttons = [];
-        }
-    }
 
-    /** Удаляет существующую кнопку по заголовку */
     private removeExistingButton(title: string): void {
-        const buttons = this.response.response.buttons!;
-        const index = buttons.findIndex(b => b.title === title);
+        if (!this.response.response.buttons) return;
+        const index = this.response.response.buttons.findIndex(b => b.title === title);
         if (index !== -1) {
-            buttons.splice(index, 1);
+            this.response.response.buttons.splice(index, 1);
         }
     }
 
-    /** Создает объект состояния сессии при первом вызове */
-    private ensureSessionStateExists(): void {
-        if (!this.response.session_state) {
-            this.response.session_state = {};
-        }
-    }
 }
