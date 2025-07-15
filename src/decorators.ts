@@ -37,7 +37,7 @@ export const Handler = (handlerId: string) => {
   )
 }
 
-export const Unknown = (handlerId: string) => {
+export const Unknown = () => {
   return applyDecorators(
     Post('unknown'),
   )
