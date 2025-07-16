@@ -4,7 +4,9 @@ import { InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
 import { Response, Request, NextFunction } from 'express';
 import { AliceRequestSchema, SessionStateSchema } from "./schemes";
 import { INTENT_KEY } from "./constants";
-import { AliceRequest, SessionState } from "./interfaces";
+
+import { AliceRequest } from "./types/api/request";
+import { SessionState } from "./types/api/sessionState";
 
 @Injectable()
 export class IntentMiddleware implements NestMiddleware, OnModuleInit {

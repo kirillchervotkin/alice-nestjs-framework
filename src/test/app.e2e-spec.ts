@@ -3,9 +3,10 @@ import { Controller, INestApplication, MiddlewareConsumer, NestModule } from '@n
 import * as request from 'supertest';
 import { IntentMiddleware } from '../intentMiddlware';
 import { Intent, Unknown } from '../decorators';
-import { AliceResponse, SkillResponseBuilder } from '../response-utils';
-import { AliceRequest } from '../interfaces';
 import { Response } from 'supertest';
+import { AliceRequest } from 'src/types/api/request';
+import { AliceResponse } from 'src/types/api/response';
+import { SkillResponseBuilder } from '../builders/skillResponseBuilder';
 
 const REPLY_TEXT = 'Hello world';
 const UNKNOWN_TEXT = 'Unknown intent';

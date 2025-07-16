@@ -1,13 +1,5 @@
-import { ImageGalleryCard, ImageGalleryItem } from "../types/cards";
-
-export interface ImageGalleryStep1 {
-    addItem(item: ImageGalleryItem): ImageGalleryStep2;
-}
-
-export interface ImageGalleryStep2 {
-    addItem(item: ImageGalleryItem): ImageGalleryStep2;
-    build(): ImageGalleryCard;
-}
+import { ImageGalleryCard, ImageGalleryStep1, ImageGalleryStep2 } from "src/types/ui/cards/imageGalleryCard";
+import { ImageGalleryItem } from "src/types/ui/cards/imageGalleryItem";
 
 export class ImageGalleryCardBuilder implements ImageGalleryStep1, ImageGalleryStep2 {
     private items: ImageGalleryItem[] = [];

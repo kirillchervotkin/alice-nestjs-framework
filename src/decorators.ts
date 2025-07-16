@@ -1,6 +1,6 @@
 import { applyDecorators, createParamDecorator, ExecutionContext, Post, SetMetadata, UseFilters } from "@nestjs/common";
-import { UserUtterance } from "./interfaces";
 import { INTENT_KEY } from "./constants";
+import { UserUtterance } from "./types/api/userUtterance";
 
 export const Data = createParamDecorator((_, ctx: ExecutionContext): unknown => {
   const request = ctx.switchToHttp().getRequest();

@@ -1,22 +1,5 @@
-import { Button } from "../interfaces";
-import { ImageGalleryItem } from "../types/cards";
-
-// Шаги построения
-export interface ImageIdStep {
-    setImageId(id: string): TitleStep;
-}
-
-export interface TitleStep {
-    setTitle(title: string): ButtonStep;
-}
-
-export interface ButtonStep {
-    setButton(button: Button): BuildStep;
-}
-
-export interface BuildStep {
-    build(): ImageGalleryItem;
-}
+import { Button } from "src/types/ui/button";
+import { BuildStep, ButtonStep, ImageGalleryItem, ImageIdStep, TitleStep } from "src/types/ui/cards/imageGalleryItem";
 
 export class ImageGalleryItemBuilder implements ImageIdStep, TitleStep, ButtonStep, BuildStep {
     private item: Partial<ImageGalleryItem> = {};

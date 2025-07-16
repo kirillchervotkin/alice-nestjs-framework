@@ -1,23 +1,6 @@
-import { Button } from "../interfaces";
-import { Card, ItemsListCard } from "../types/cards";
-import { ItemsListItem } from "../types/cards";
-
-interface ItemsListStepSetHeader {
-    setHeader(text: string): ItemsListStepAddFirstItem;
-}
-
-interface ItemsListStepAddFirstItem {
-    addItem(item: ItemsListItem): ItemsListStepAddMoreItemsOrSetFooter;
-}
-
-interface ItemsListStepAddMoreItemsOrSetFooter {
-    addItem(item: ItemsListItem): ItemsListStepAddMoreItemsOrSetFooter;
-    setFooter(text: string, button: Button): ItemsListStepBuild;
-}
-
-interface ItemsListStepBuild {
-    build(): ItemsListCard;
-}
+import { Button } from "src/types/ui/button";
+import { ItemsListCard, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild, ItemsListStepSetHeader } from "src/types/ui/cards/itemListCard";
+import { ItemsListItem } from "src/types/ui/cards/itemListItem";
 
 class ItemsListCardBuilder implements ItemsListStepSetHeader, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild {
     private card: Partial<ItemsListCard> = { type: 'ItemsList' };

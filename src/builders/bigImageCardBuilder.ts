@@ -1,32 +1,5 @@
-import { Button } from "../interfaces";
-
-export interface BigImageCard {
-    type: 'BigImage';
-    image_id: string;
-    title: string;
-    description: string;
-    button: Button;
-}
-
-export interface StepSetImageId {
-    setImageId(id: string): StepSetTitle;
-}
-
-export interface StepSetTitle {
-    setTitle(title: string): StepSetDescription;
-}
-
-export interface StepSetDescription {
-    setDescription(description: string): StepSetButton;
-}
-
-export interface StepSetButton {
-    setButton(button: Button): StepBuild;
-}
-
-export interface StepBuild {
-    build(): BigImageCard;
-}
+import { Button } from "src/types/ui/button";
+import { BigImageCard, StepBuild, StepSetButton, StepSetDescription, StepSetImageId, StepSetTitle } from "src/types/ui/cards/bigImageCard";
 
 export class BigImageCardBuilder implements StepSetImageId, StepSetTitle, StepSetDescription, StepSetButton, StepBuild {
     private card: Partial<BigImageCard> = { type: 'BigImage' };

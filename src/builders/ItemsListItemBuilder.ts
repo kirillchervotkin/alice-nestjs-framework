@@ -1,33 +1,6 @@
-import { Button } from "../interfaces";
+import { Button } from "src/types/ui/button";
 
-
-export interface ItemsListItem {
-    image_id: string;
-    title: string;
-    description: string;
-    button: Button;
-}
-
-
-interface ItemsListItemImageIdStep {
-    setImageId(id: string): ItemsListItemTitleStep;
-}
-
-interface ItemsListItemTitleStep {
-    setTitle(title: string): ItemsListItemDescriptionStep;
-}
-
-interface ItemsListItemDescriptionStep {
-    setDescription(description: string): ItemsListItemButtonStep;
-}
-
-interface ItemsListItemButtonStep {
-    setButton(button: Button): ItemsListItemReadyToBuild;
-}
-
-interface ItemsListItemReadyToBuild {
-    build(): ItemsListItem;
-}
+import { ItemsListItemImageIdStep, ItemsListItemTitleStep, ItemsListItemDescriptionStep, ItemsListItemButtonStep, ItemsListItemReadyToBuild, ItemsListItem } from "src/types/ui/cards/itemListItem";
 
 export class ItemsListItemBuilder implements 
     ItemsListItemImageIdStep, 
