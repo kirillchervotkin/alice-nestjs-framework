@@ -24,7 +24,7 @@ import {
   Data, 
   UserUtteranceDecorator, 
   SkillResponseBuilder,
-  SkillResponse, 
+  AliceResponse, 
   Unknown,
   UserUtterance,
   Button
@@ -34,7 +34,7 @@ import {
 export class AliceController {
   // Обработчик когда пользователь запустил навык
   @Intent()
-  start(): SkillResponse {
+  start(): AliceResponse {
     return new SkillResponseBuilder('Привет! Как твои дела? ')
       .setData({ 'text' : 'Этот текст можно получить в следующем обработчике'}) //поле текст можно будет получить через декоратор @Data при следующем запросе
       .setNextHandler('NextHandler') //Следующий запрос будет обрабатывать методом с декоратором @Handler('NextHandler')
@@ -56,7 +56,7 @@ export class AliceController {
 
   // Обработчик нераспознанных команд
   @Unknown('Unknown')
-  fallback():SkillResponse {
+  fallback(): AliceResponse {
     const buttons: Button[] = [
     { title: 'Кнопка 1', hide: true },
     { title: 'Кнопка 2', hide: true },
@@ -64,14 +64,14 @@ export class AliceController {
     return new SkillResponseBuilder('Не поняла вас. Повторите пожалуйста.')
       .setPrependButton('Помощь', true) //Добавляет кнопку в начало, которая после нажатия исчезнет
       .setPrependButton('О навыке', false) //Добавляет кнопку в начало, которая после нажатия останется
-      .setButton('О погоде', true) //Добавляет кнопку в конец, которая после нажатия исчезнет
+      .setButton({title:'кнопка 3', hide: true}) //Добавляет кнопку в конец, которая после нажатия исчезнет
       .setButtons(buttons) //Добавляет несколько кнопок
       .build();
   }
 
   // Обработчик интента с ID 'IntentID'
   @Intent('IntentID')
-  intent(): SkillResponse {
+  intent(): AliceResponse {
     return new SkillResponse('Привет');
   }
 }
