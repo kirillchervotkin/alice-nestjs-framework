@@ -2,7 +2,7 @@ import { Button } from "src/types/ui/button";
 import { ItemsListCard, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild, ItemsListStepSetHeader } from "src/types/ui/cards/itemListCard";
 import { ItemsListItem } from "src/types/ui/cards/itemListItem";
 
-class ItemsListCardBuilder implements ItemsListStepSetHeader, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild {
+export class ItemsListCardBuilder implements ItemsListStepSetHeader, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild {
     private card: Partial<ItemsListCard> = { type: 'ItemsList' };
     private items: ItemsListItem[] = [];
 
