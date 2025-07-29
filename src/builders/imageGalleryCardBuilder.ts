@@ -1,5 +1,5 @@
-import { ImageGalleryCard, ImageGalleryStep1, ImageGalleryStep2 } from "src/types/ui/cards/imageGalleryCard";
-import { ImageGalleryItem } from "src/types/ui/cards/imageGalleryItem";
+import { ImageGalleryCard, ImageGalleryStep1, ImageGalleryStep2 } from "../types/ui/cards/imageGalleryCard";
+import { ImageGalleryItem } from "../types/ui/cards/imageGalleryItem";
 
 /**
  * Строитель для карточки галереи изображений (ImageGallery) в Яндекс.Диалогах.

@@ -1,4 +1,4 @@
-import { Button } from "src/types/ui/button";
+import { Button } from "../types/ui/button";
 
 import { ItemsListItemImageIdStep, ItemsListItemTitleStep, ItemsListItemDescriptionStep, ItemsListItemButtonStep, ItemsListItemReadyToBuild, ItemsListItem } from "src/types/ui/cards/itemListItem";
 

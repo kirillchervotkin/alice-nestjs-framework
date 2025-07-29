@@ -1,6 +1,6 @@
-import { Button } from "src/types/ui/button";
+import { Button } from "../types/ui/button";
 import { ItemsListCard, ItemsListStepAddFirstItem, ItemsListStepAddMoreItemsOrSetFooter, ItemsListStepBuild, ItemsListStepSetHeader } from "src/types/ui/cards/itemListCard";
-import { ItemsListItem } from "src/types/ui/cards/itemListItem";
+import { ItemsListItem } from "../types/ui/cards/itemListItem";
 
 /**
  * Строитель для карточки "Список товаров" (ItemsList) в Яндекс.Диалогах.

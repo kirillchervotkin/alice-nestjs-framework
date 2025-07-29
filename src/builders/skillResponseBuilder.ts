@@ -1,16 +1,15 @@
-import { AliceResponse } from "src/types/api/response";
-import { Button } from "src/types/ui/button";
-import { Card } from "src/types/ui/cards/card";
+import { AliceResponse } from "../types/api/response";
+import { Button } from "../types/ui/button";
+import { Card } from "../types/ui/cards/card";
 
 export class SkillResponseBuilder {
-
+    
+    private response: AliceResponse;
     /**
      * Создает экземпляр билдера
      * @param {string} message - Текст ответа для пользователя
      * @see {@link https://yandex.ru/dev/dialogs/alice/doc/ru/response#response-desc|Документация: Поле text}
      */
-    private response: AliceResponse;
-
     constructor(message: string) {
         this.response = {
             version: "1.0",

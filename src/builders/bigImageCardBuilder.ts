@@ -1,5 +1,5 @@
-import { Button } from "src/types/ui/button";
-import { BigImageCard, StepBuild, StepSetButton, StepSetDescription, StepSetImageId, StepSetTitle } from "src/types/ui/cards/bigImageCard";
+import { Button } from "../types/ui/button";
+import { BigImageCard, StepBuild, StepSetButton, StepSetDescription, StepSetImageId, StepSetTitle } from "../types/ui/cards/bigImageCard";
 
 /**
  * Строитель для карточки с изображением (BigImage) в Яндекс.Диалогах.

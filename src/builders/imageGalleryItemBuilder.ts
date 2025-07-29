@@ -1,5 +1,5 @@
-import { Button } from "src/types/ui/button";
-import { BuildStep, ButtonStep, ImageGalleryItem, ImageIdStep, TitleStep } from "src/types/ui/cards/imageGalleryItem";
+import { Button } from "../types/ui/button";
+import { BuildStep, ButtonStep, ImageGalleryItem, ImageIdStep, TitleStep } from "../types/ui/cards/imageGalleryItem";
 
 /**
  * Строитель для элемента галереи изображений (ImageGalleryItem) в Яндекс.Диалогах.
