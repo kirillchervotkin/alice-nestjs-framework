@@ -22,5 +22,3 @@ export * from './builders/imageGalleryCardBuilder'
 export * from './builders/imageGalleryItemBuilder'
 export * from './builders/itemsListCardBuilder'
 export * from './builders/ItemsListItemBuilder'
-
-export * from './response-utils'
