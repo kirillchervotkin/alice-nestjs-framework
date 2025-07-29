@@ -15,7 +15,6 @@ const UNKNOWN_TEXT = 'Unknown intent';
 export class AppController {
     @Intent('intentId')
     testRouting(): AliceResponse {
-        console.log('test');
         return new SkillResponseBuilder(REPLY_TEXT).build();
     }
     @Intent()
